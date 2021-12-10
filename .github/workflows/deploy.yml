@@ -1,9 +1,7 @@
 name: CI
 on:
-  push:
-    branches: [ staging ]
-  pull_request:
-    branches: [ staging ]
+  repository_dispatch:
+    types: [deploy-service]
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
@@ -18,4 +16,4 @@ jobs:
         run: gcloud info
       - name: Clone repo to the instance "base-image"
         run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet 
-             --command="sudo rm -rf /tmp/joyride && sudo git clone -b staging https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html"
+             --command="sudo rm -rf /tmp/joyride && sudo git clone -b ${{github.event.ref}} https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html"
