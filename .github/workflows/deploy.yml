@@ -1,7 +1,8 @@
 name: CI-develop
 on:
   repository_dispatch:
-    types: [develop-service]
+    types: 
+      - develop-service
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
