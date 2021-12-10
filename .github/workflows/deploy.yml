@@ -2,18 +2,10 @@ name: CI
 on:
   repository_dispatch:
     types: [deploy-service]
+
 jobs:
-  build-deploy:
+  say_hello:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_DEV_ID }}
-          service_account_key: ${{ secrets.GCP_PROJECT_SA_KEY }}
-          export_default_credentials: true
-      - name: Use gcloud CLI
-        run: gcloud info
-      - name: Clone repo to the instance "base-image"
-        run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet 
-             --command="sudo rm -rf /tmp/joyride && sudo git clone -b ${{github.event.ref}} https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html"
+      - run: |
+          echo "hello ${{github.ref}}!"
