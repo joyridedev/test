@@ -1,8 +1,9 @@
 name: CI-develop
 on:
-  repository_dispatch:
-    types: [deploy-service-staging]
-
+  push:
+    branches: [ staging ]
+  pull_request:
+    branches: [ staging ]
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
