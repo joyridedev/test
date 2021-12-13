@@ -17,4 +17,4 @@ jobs:
         #     run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet
         #    --command="sudo rm -rf /tmp/joyride && sudo git clone -b "${{toJson(github.event.client_payload)}}" https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/"
 
-        run: 'echo "sudo git clone -b "${{toJson(github.event.client_payload)}}" https://github.com/joyridedev/test.git"'
+        run: 'echo "sudo git clone -b "${{toJson(github.event.client_payload.ref)}}" https://github.com/joyridedev/test.git"'
