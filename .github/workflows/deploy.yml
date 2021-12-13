@@ -1,12 +1,19 @@
 name: example-client-payload-action
 on: repository_dispatch
+
 jobs:
-  test:
-    name: Test
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - run: 'echo "field: ${{ github.event.client_payload.ref }}"'
-      - run: 'echo "payload: ${{ toJson(github.event.client_payload) }}"'
-      - run: echo baz
-        if: github.event.action == 'baz'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_DEV_ID }}
+          service_account_key: ${{ secrets.GCP_PROJECT_SA_KEY }}
+          export_default_credentials: true
+      - name: Use gcloud CLI
+        run: gcloud info
+      - name: Clone repo to the instance "demo-01"
+        run: gcloud compute ssh --zone "northamerica-northeast1-c" "demo-01" --project "joyride-terraform-us-testing" --quiet
+             --command="sudo rm -rf /tmp/joyride && sudo git clone -b "${{toJson(github.event.client_payload)}}" https://github.com/gcpcloud9331/joyride-demo.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /root/app/"
+
