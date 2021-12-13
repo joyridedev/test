@@ -1,11 +1,12 @@
-name: CI-develop
-on:
-  repository_dispatch:
-    types: [deploy-service]
-
+name: example-client-payload-action
+on: repository_dispatch
 jobs:
-  say_hello:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "hello ${{github.inputs.ref}}!"
+      - uses: actions/checkout@v1
+      - run: 'echo "field: ${{ github.event.client_payload.ref }}"'
+      - run: 'echo "payload: ${{ toJson(github.event.client_payload) }}"'
+      - run: echo baz
+        if: github.event.action == 'baz'
