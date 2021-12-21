@@ -16,17 +16,16 @@ jobs:
         run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet
              --command="sudo rm -rf /tmp/joyride && sudo git clone -b ${{toJson(github.event.client_payload.ref)}} https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/"
 
-notify:
-
-    name: Notify on Slack
-    runs-on: ubuntu-latest
+    notify:
+      name: Notify on Slack
+      runs-on: ubuntu-latest
     # Only run this workflow when "build" workflow succeeds
-    needs: [build-deploy]
+      needs: [build-deploy]
 
     # Only run this workflow if it target is main branch on pull_request event
     #if: ${{ github.base_ref == 'main' && github.event_name == 'pull_request' }}
 
-    steps:
+      steps:
 
       - uses: rtCamp/action-slack-notify@v2
         env:
