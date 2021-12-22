@@ -16,12 +16,17 @@ jobs:
         run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet
              --command="sudo rm -rf /tmp/joyride && sudo git clone -b ${{toJson(github.event.client_payload.ref)}} https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/"
    
-  slackNotification:
-    name: Slack Notification
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  notify:
+     needs: [build-deploy]
+     name: Slack Notification
+     runs-on: ubuntu-latest
+     steps:
+     - uses: actions/checkout@v2
+     - name: Slack Notification
+       uses: rtCamp/action-slack-notify@v2
+       env:
+         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+         SLACK_USERNAME: Deployment-service
+         SLACK_ICON: https://joyride.city/wp-content/uploads/2019/11/joyride-logo.png
+         SLACK_FOOTER: Powered By Joyride's GitHub Actions Library
+       if: success()
