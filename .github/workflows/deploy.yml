@@ -15,10 +15,11 @@ jobs:
         if: github.event.client_payload.ref == 'staging'
         run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet
              --command="sudo rm -rf /tmp/joyride && sudo git clone -b ${{toJson(github.event.client_payload.ref)}} https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/"
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v1
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.16.0
         with:
-          status: ${{ job.status }}
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"You have a new request: \"}},{\"type\":\"section\",\"fields\":[{\"type\":\"mrkdwn\",\"text\":\"*Type:* Computer (laptop)\"},{\"type\":\"mrkdwn\",\"text\":\"*When:* Submitted Aut 10\"}]}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
