@@ -21,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     # Only run this workflow when "build" workflow succeeds
     needs: [build-deploy]
+    
+    # Only run this workflow if it target is main branch on pull_request event
+    if: ${{ github.base_ref == 'main' && github.event_name == 'pull_request' }}
     steps:
 
       - uses: abinoda/slack-action@master
