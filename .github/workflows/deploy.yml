@@ -15,6 +15,16 @@ jobs:
         if: github.event.client_payload.ref == 'staging'
         run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet
              --command="sudo rm -rf /tmp/joyride && sudo git clone -b ${{toJson(github.event.client_payload.ref)}} https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/"
-      - name: Branch diffent then main
-        if: github.event.client_payload.ref == 'main'
-        run: echo 'This branch is ${{toJson(github.event.client_payload.ref)}}'
+
+  notify:
+      name: Notify on Slack
+      runs-on: ubuntu-latest
+      needs: [build-deploy]
+      steps:
+          - uses: 8398a7/action-slack@v3
+            env:
+               SLACK_COLOR: ${{ job.status }
+               SLACK_TITLE: Post Title
+               SLACK_MESSAGE: 'Post Content :rocket:'
+               SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            if: always()
