@@ -29,6 +29,6 @@ jobs:
          SLACK_USERNAME: Deployment-service
          SLACK_ICON: https://joyride.city/wp-content/uploads/2019/11/joyride-logo.png?size=48
          SLACK_FOOTER: Powered By Joyride's GitHub Actions Library
-         SLACK_TITLE: ${{ github.event.commits[0].message }}
-         SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+         SLACK_TITLE: Notification
+         SLACK_MESSAGE: ${{toJson(github.event.client_payload.ref)}}  Deployed
        if: success()
