@@ -27,6 +27,6 @@ jobs:
        env:
          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
          SLACK_USERNAME: Deployment-service
-         SLACK_ICON: https://joyride.city/wp-content/uploads/2019/11/joyride-logo.png
+         SLACK_ICON: https://joyride.city/wp-content/uploads/2019/11/joyride-logo.png?size=48
          SLACK_FOOTER: Powered By Joyride's GitHub Actions Library
        if: success()
