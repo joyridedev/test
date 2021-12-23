@@ -6,4 +6,6 @@ steps:
   - '-c'
   - |
     set -x && \
-    gcloud compute ssh base-image --zone=us-central1-a --command='sudo rm -rf /tmp/joyride && sudo git clone https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/'
+    gcloud compute ssh base-image --zone=us-central1-a --command='sudo rm -rf /tmp/joyride && sudo git clone -b $REF https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/'
+tags:
+  - webhook-trigger
