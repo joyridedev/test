@@ -15,6 +15,7 @@ jobs:
         if: github.event.client_payload.ref == 'staging'
         run: gcloud compute ssh --zone "us-central1-a" "base-image" --project "joyride-gcp-dev-env" --quiet
              --command="sudo rm -rf /tmp/joyride && sudo git clone -b ${{toJson(github.event.client_payload.ref)}} https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/"
+<<<<<<< HEAD
 
   notify:
       name: Notify on Slack
@@ -28,3 +29,22 @@ jobs:
                SLACK_MESSAGE: 'Post Content :rocket:'
                SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             if: always()
+=======
+   
+  notify:
+     needs: [build-deploy]
+     name: Slack Notification
+     runs-on: ubuntu-latest
+     steps:
+     - uses: actions/checkout@v2
+     - name: Slack Notification
+       uses: rtCamp/action-slack-notify@v2
+       env:
+         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+         SLACK_USERNAME: Deployment-service
+         SLACK_ICON: https://joyride.city/wp-content/uploads/2019/11/joyride-logo.png?size=48
+         SLACK_FOOTER: Powered By Joyride's GitHub Actions Library
+         SLACK_TITLE: ${{ github.repository }}
+         SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+       if: success()
+>>>>>>> b2b6408bf8b03a75a68406117c66b5cc40e65399
