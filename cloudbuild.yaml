@@ -8,16 +8,3 @@ steps:
     set -x && \
     gcloud compute ssh base-image --zone=us-central1-a --command='sudo rm -rf /tmp/joyride && sudo git clone -b $BRANCH_NAME https://github.com/joyridedev/test.git /tmp/joyride/ && sudo cp -r /tmp/joyride/* /var/www/html/'
 
-apiVersion: cloud-build-notifiers/v1
-kind: SlackNotifier
-metadata:
-  name: example-slack-notifier
-spec:
-  notification:
-    filter: build.status == Build.Status.SUCCESS
-    delivery:
-      webhookUrl:
-        secretRef: webhook-url
-  secrets:
-  - name: webhook-url
-    value: projects/711361509807/secrets/slack/versions/latest
